@@ -1,0 +1,9 @@
+/*.iml
+/*.ipr
+/*.iws
+/target
+/reports
+/docs
+/_buildr.rb
+/bin
+/.bundle
