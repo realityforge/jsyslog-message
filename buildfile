@@ -11,4 +11,5 @@ define('jsyslog-message') do
   test.using :testng
 
   package(:jar)
+  package(:sources)
 end
