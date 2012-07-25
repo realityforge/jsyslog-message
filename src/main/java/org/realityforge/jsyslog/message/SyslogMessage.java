@@ -448,7 +448,7 @@ public class SyslogMessage
       }
       else
       {
-        structuredData = new HashMap<>();
+        structuredData = new HashMap<String, List<StructuredDataParameter>>();
         int index = startStructuredData;
         while( SD_START == rawMessage.charAt( index ) )
         {
@@ -462,7 +462,7 @@ public class SyslogMessage
           }
           final String sdId = sb.toString();
           sb.setLength( 0 );
-          final ArrayList<StructuredDataParameter> params = new ArrayList<>();
+          final ArrayList<StructuredDataParameter> params = new ArrayList<StructuredDataParameter>();
           structuredData.put( sdId, params );
           ch = rawMessage.charAt( index );
           while( SD_END != ch )

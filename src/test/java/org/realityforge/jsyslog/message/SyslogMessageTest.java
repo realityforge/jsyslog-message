@@ -251,21 +251,21 @@ public class SyslogMessageTest
     final String appName = "myapp";
     final String procId = "myproc";
     final String msgId = "mymsg";
-    final Map<String, List<StructuredDataParameter>> sd = new HashMap<>();
-    final ArrayList<StructuredDataParameter> params = new ArrayList<>();
+    final Map<String, List<StructuredDataParameter>> sd = new HashMap<String, List<StructuredDataParameter>>();
+    final ArrayList<StructuredDataParameter> params = new ArrayList<StructuredDataParameter>();
     params.add( new StructuredDataParameter( "key", "myvalue" ) );
     sd.put( "key", params );
     final String text = "message";
     final SyslogMessage message = new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, sd, text );
     assertEquals( message, message );
 
-    final HashMap<String, List<StructuredDataParameter>> structuredData = new HashMap<>( sd );
+    final HashMap<String, List<StructuredDataParameter>> structuredData = new HashMap<String, List<StructuredDataParameter>>( sd );
     final SyslogMessage message2 = new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, structuredData, text );
     assertEquals( message, message2 );
     assertEquals( message.hashCode(), message2.hashCode() );
 
-    final HashMap<String, List<StructuredDataParameter>> structuredData3 = new HashMap<>();
-    final ArrayList<StructuredDataParameter> params3 = new ArrayList<>( params );
+    final HashMap<String, List<StructuredDataParameter>> structuredData3 = new HashMap<String, List<StructuredDataParameter>>();
+    final ArrayList<StructuredDataParameter> params3 = new ArrayList<StructuredDataParameter>( params );
     structuredData3.put( "key", params3 );
     final SyslogMessage message3 = new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, structuredData3, text );
     assertEquals( message, message3 );
@@ -286,20 +286,20 @@ public class SyslogMessageTest
     assertNotEquals( message, new SyslogMessage( facility, level, time, hostname, appName, procId, "other", sd, text ) );
     assertNotEquals( message, new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, null, text ) );
 
-    final Map<String, List<StructuredDataParameter>> sd2 = new HashMap<>();
-    final ArrayList<StructuredDataParameter> params2 = new ArrayList<>();
+    final Map<String, List<StructuredDataParameter>> sd2 = new HashMap<String, List<StructuredDataParameter>>();
+    final ArrayList<StructuredDataParameter> params2 = new ArrayList<StructuredDataParameter>();
     params2.add( new StructuredDataParameter( "key", "other" ) );
     sd2.put( "key", params2 );
     assertNotEquals( message, new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, sd2, text ) );
 
-    final Map<String, List<StructuredDataParameter>> sd3 = new HashMap<>();
-    final ArrayList<StructuredDataParameter> params3b = new ArrayList<>();
+    final Map<String, List<StructuredDataParameter>> sd3 = new HashMap<String, List<StructuredDataParameter>>();
+    final ArrayList<StructuredDataParameter> params3b = new ArrayList<StructuredDataParameter>();
     params3b.add( new StructuredDataParameter( "other", "myvalue" ) );
     sd3.put( "key", params3b );
     assertNotEquals( message, new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, sd3, text ) );
 
-    final Map<String, List<StructuredDataParameter>> sd4 = new HashMap<>();
-    final ArrayList<StructuredDataParameter> params4 = new ArrayList<>();
+    final Map<String, List<StructuredDataParameter>> sd4 = new HashMap<String, List<StructuredDataParameter>>();
+    final ArrayList<StructuredDataParameter> params4 = new ArrayList<StructuredDataParameter>();
     params4.add( new StructuredDataParameter( "key", "myvalue" ) );
     sd4.put( "other", params4 );
     assertNotEquals( message, new SyslogMessage( facility, level, time, hostname, appName, procId, msgId, sd4, text ) );
