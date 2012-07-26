@@ -117,8 +117,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseStructuredSyslogMessage( "<34>1 2003-10-11T22:14:15.003Z mymachine.example.com su - ID47 [exampleSDID@32473 iut=\"3\" eventSource=\"Application\" eventID=\"1011\"][examplePriority@32473 class=\"high\"] BOM'su root' failed for lonvick on /dev/pts/8" );
-    assertEquals( message.getFacility(), 4 );
-    assertEquals( message.getLevel(), 2 );
+    assertEquals( message.getFacility(), Facility.AUTH );
+    assertEquals( message.getLevel(), Severity.CRIT );
     final DateTime timestamp = message.getTimestamp();
     assertNotNull( timestamp );
     assertEquals( timestamp.toDate().getTime(), 1065910455003L );
@@ -150,8 +150,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseRFC3164SyslogMessage( "<34>Oct 11 22:14:15 mymachine su[21]: 'su root' failed for lonvick on /dev/pts/8" );
-    assertEquals( message.getFacility(), 4 );
-    assertEquals( message.getLevel(), 2 );
+    assertEquals( message.getFacility(), Facility.AUTH );
+    assertEquals( message.getLevel(), Severity.CRIT );
     final DateTime timestamp = message.getTimestamp();
     assertNotNull( timestamp );
     assertEquals( timestamp.getSecondOfMinute(), 15 );
@@ -171,8 +171,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseRFC3164SyslogMessage( "<34>Oct 11 22:14:15 mymachine 'su root' failed for lonvick on /dev/pts/8" );
-    assertEquals( message.getFacility(), 4 );
-    assertEquals( message.getLevel(), 2 );
+    assertEquals( message.getFacility(), Facility.AUTH );
+    assertEquals( message.getLevel(), Severity.CRIT );
     final DateTime timestamp = message.getTimestamp();
     assertNotNull( timestamp );
     assertEquals( timestamp.getSecondOfMinute(), 15 );
@@ -192,8 +192,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseRFC3164SyslogMessage( "<34>Oct 11 22:14:15 Bing!" );
-    assertEquals( message.getFacility(), 4 );
-    assertEquals( message.getLevel(), 2 );
+    assertEquals( message.getFacility(), Facility.AUTH );
+    assertEquals( message.getLevel(), Severity.CRIT );
     final DateTime timestamp = message.getTimestamp();
     assertNotNull( timestamp );
     assertEquals( timestamp.getSecondOfMinute(), 15 );
@@ -214,8 +214,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseRFC3164SyslogMessage( "<34>Bing!" );
-    assertEquals( message.getFacility(), 4 );
-    assertEquals( message.getLevel(), 2 );
+    assertEquals( message.getFacility(), Facility.AUTH );
+    assertEquals( message.getLevel(), Severity.CRIT );
     assertNull( message.getTimestamp() );
     assertNull( message.getHostname() );
     assertNull( message.getHostname() );
@@ -230,8 +230,8 @@ public class SyslogMessageTest
   {
     final SyslogMessage message =
       SyslogMessage.parseRFC3164SyslogMessage( "Bing!" );
-    assertEquals( message.getFacility(), -1 );
-    assertEquals( message.getLevel(), -1 );
+    assertNull( message.getFacility() );
+    assertNull( message.getLevel() );
     assertNull( message.getTimestamp() );
     assertNull( message.getHostname() );
     assertNull( message.getHostname() );
@@ -244,8 +244,8 @@ public class SyslogMessageTest
   @Test
   public void equals()
   {
-    final int facility = 1;
-    final int level = 2;
+    final Facility facility = Facility.ALERT;
+    final Severity level = Severity.CRIT;
     final DateTime time = new DateTime();
     final String hostname = "myhost";
     final String appName = "myapp";
@@ -272,8 +272,8 @@ public class SyslogMessageTest
     assertEquals( message.hashCode(), message3.hashCode() );
 
     assertNotEquals( message, "X" );
-    assertNotEquals( message, new SyslogMessage( 44, level, time, hostname, appName, procId, msgId, sd, text ) );
-    assertNotEquals( message, new SyslogMessage( facility, 44, time, hostname, appName, procId, msgId, sd, text ) );
+    assertNotEquals( message, new SyslogMessage( Facility.CRON, level, time, hostname, appName, procId, msgId, sd, text ) );
+    assertNotEquals( message, new SyslogMessage( facility, Severity.INFO, time, hostname, appName, procId, msgId, sd, text ) );
     assertNotEquals( message, new SyslogMessage( facility, level, null, hostname, appName, procId, msgId, sd, text ) );
     assertNotEquals( message, new SyslogMessage( facility, level, new DateTime(), hostname, appName, procId, msgId, sd, text ) );
     assertNotEquals( message, new SyslogMessage( facility, level, time, null, appName, procId, msgId, sd, text ) );

@@ -26,8 +26,10 @@ public class SyslogMessage
   private static final char SD_VALUE_QUOTE = '"';
   private static final char SD_ASSIGN = '=';
 
-  private final int _facility;
-  private final int _level;
+  @Nullable
+  private final Facility _facility;
+  @Nullable
+  private final Severity _level;
   @Nullable
   private final DateTime _timestamp;
   @Nullable
@@ -43,8 +45,8 @@ public class SyslogMessage
   @Nullable
   private final String _message;
 
-  public SyslogMessage( final int facility,
-                        final int level,
+  public SyslogMessage( @Nullable final Facility facility,
+                        @Nullable final Severity level,
                         @Nullable final DateTime timestamp,
                         @Nullable final String hostname,
                         @Nullable final String appName,
@@ -64,12 +66,14 @@ public class SyslogMessage
     _message = message;
   }
 
-  public int getFacility()
+  @Nullable
+  public Facility getFacility()
   {
     return _facility;
   }
 
-  public int getLevel()
+  @Nullable
+  public Severity getLevel()
   {
     return _level;
   }
@@ -170,8 +174,8 @@ public class SyslogMessage
   @Override
   public int hashCode()
   {
-    int result = _facility;
-    result = 31 * result + _level;
+    int result = ( _facility != null ? _facility.ordinal() : 0 );
+    result = 31 * result + ( _level != null ? _level.ordinal() : 0 );
     result = 31 * result + ( _timestamp != null ? _timestamp.hashCode() : 0 );
     result = 31 * result + ( _hostname != null ? _hostname.hashCode() : 0 );
     result = 31 * result + ( _appName != null ? _appName.hashCode() : 0 );
@@ -185,8 +189,8 @@ public class SyslogMessage
   public static SyslogMessage parseRFC3164SyslogMessage( final String rawMessage )
   {
     String message = rawMessage;
-    int facility = -1;
-    int level = -1;
+    Facility facility = null;
+    Severity level = null;
     DateTime timestamp = null;
     String hostname = null;
     String appName = null;
@@ -215,8 +219,8 @@ public class SyslogMessage
         // Failed to parse PRI
         throw new IllegalArgumentException();
       }
-      facility = priority >> 3;
-      level = priority - ( facility << 3 );
+      facility = Facility.values()[ priority >> 3 ];
+      level = Severity.values()[ priority - ( facility.ordinal() << 3 ) ];
       index = endPri + 1;
 
       message = rawMessage.substring( index );
@@ -307,7 +311,9 @@ public class SyslogMessage
     final String appName = getAppName() == null ? NILVALUE_STRING : getAppName();
     final String procId = getProcId() == null ? NILVALUE_STRING : getProcId();
     final String msgId = getMsgId() == null ? NILVALUE_STRING : getMsgId();
-    final int pri = getLevel() + ( getFacility() << 3 );
+    final Severity level = getLevel();
+    final Facility facility = getFacility();
+    final int pri = ( null != level ? level.ordinal() : 0 ) + ( ( null != facility ? facility.ordinal() : 0 ) << 3 );
     final String sd;
     final Map<String, List<StructuredDataParameter>> structuredData = getStructuredData();
     if( null != structuredData )
@@ -370,8 +376,8 @@ public class SyslogMessage
         // Failed to parse PRI
         throw new IllegalArgumentException( "Failed to parse PRI: " + rawMessage );
       }
-      final int facility = priority >> 3;
-      final int level = priority - ( facility << 3 );
+      final Facility facility = Facility.values()[ priority >> 3 ];
+      final Severity level = Severity.values()[ priority - ( facility.ordinal() << 3 ) ];
 
       final int startVersion = endPri + 1;
       final int endVersion = rawMessage.indexOf( SP, startVersion );
