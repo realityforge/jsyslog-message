@@ -7,10 +7,16 @@ define 'jsyslog-message' do
   compile.options.target = '1.6'
   compile.options.lint = 'all'
 
+  pom.add_apache2_license
+  pom.add_github_project('realityforge/jsyslog-message')
+  pom.add_developer('realityforge', 'Peter Donald')
+  pom.optional_dependencies.concat [:javax_annotation]
+
   compile.with :javax_annotation, :joda_time
 
   test.using :testng
 
   package(:jar)
   package(:sources)
+  package(:javadoc)
 end
