@@ -1,3 +1,5 @@
+require 'buildr/custom_pom'
+require 'buildr/gpg'
 require 'buildr/git_auto_version'
 
 desc "jSyslog Message: A tiny library for parsing syslog messages"
